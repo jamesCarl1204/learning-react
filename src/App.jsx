@@ -1,10 +1,11 @@
-import Button from './Button'
-import ProfilePic from './ProfilePic'
+
+import MyComponent from './MyComponent'
+import Counter from './Counter.jsx'
 
 function App() {
   return(
     <>
-    <ProfilePic/>
+    <Counter/>
     </>
   )
 }
