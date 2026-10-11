@@ -7,10 +7,10 @@ function Home() {
 
     const fetchUsers = async () => {
         try {
-            const res = await fetch('http://localhost:3000/users');
+            const res = await fetch('/api/users');
             if(!res.ok) throw new Error('failed to fetch')
             const data = await res.json()
-            setUsers(data)
+            setUsers(data.data)
         } catch(err) {
             console.error(err)
         }
@@ -27,7 +27,7 @@ function Home() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try{
-            const res = await fetch('http://localhost:3000/users', {
+            const res = await fetch('/api/users', {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 body: JSON.stringify(form)
@@ -41,10 +41,20 @@ function Home() {
             console.error(err)
         }
     }
+
+    const handleDelete = async(id) => {
+        try{
+            const res = await fetch(`/api/users/${id}`, {method:'DELETE'})
+            if(!res.ok) throw new Error('failed to delete');
+            fetchUsers()
+        }catch(err) {
+            console.log(err)
+        }
+    }
     return(
         <>
         <div className={styles.pageContainer}>
-            <form className={styles.form}>
+            <form className={styles.form} onSubmit={handleSubmit}>
                 <label>first name</label>
                 <input
                 type="text"
@@ -67,7 +77,7 @@ function Home() {
                 placeholder="address"
                 value={form.address}
                 onChange={handleChange} required/>
-                <button type="submit" onSubmit={handleSubmit}>ADD</button>
+                <button type="submit" >ADD</button>
             </form>
 
             <table className={styles.table}>
@@ -79,13 +89,14 @@ function Home() {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) =>( 
-                    <tr key={user.id}>
+                    {users.map((user) => {
+                return(<tr key={user.id}>
                         <td>{user.fname}</td>
                         <td>{user.lname}</td>
                         <td>{user.address}</td>
-                    </tr>
-                    ))}
+                        <td><button onClick={() => handleDelete(user.id)}>Delete</button></td>
+                        </tr>)
+})}
                 </tbody>
             </table>
 
